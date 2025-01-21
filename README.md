@@ -1,13 +1,13 @@
-
 # Spotify Data Analysis
 
 This project analyzes different features of popular songs and artists, and compares popularity on different platforms including Tik Tok and YouTube. Using Python libraries like `pandas`, `matplotlib`, and `seaborn`, the analysis explores correlations, trends, and patterns in the dataset.
 
 ## Features
 - **Correlation Analysis**: Examine relationships between TikTok views, likes, posts, and platform metrics such as Spotify streams and YouTube views.
-- **Visualization**: Generate insightful plots, including scatter plots, bar charts and pie charts.
+- **Visualization**: Generate insightful plots, including scatter plots, bar charts, and pie charts.
 - **Top Track Analysis**: Identify and visualize the top tracks and artists by Spotify streams.
 - **Comparative Analysis**: Compare Spotify popularity with airplay spins using scatter plots.
+- **Tag Frequency Analysis**: Analyze and visualize the frequency of tags associated with tracks using histograms and word clouds.
 
 ## Dataset
 The dataset contains information about:
@@ -20,54 +20,41 @@ The dataset contains information about:
 Ensure the dataset is cleaned and preprocessed before running the scripts.
 
 ## Requirements
-Install the following Python libraries:
-- pandas
-- matplotlib
-- seaborn
+- `pandas`
+- `matplotlib`
+- `seaborn`
+- `hvplot`
+- `requests`
+- `dotenv`
+- `pickle`
+- `wordcloud`
 
-```bash
-pip install pandas matplotlib seaborn
-```
+## Notebook: musicPy.ipynb
+
+The `musicPy.ipynb` notebook performs the following steps:
+
+### Data Wrangling
+1. **Imports necessary modules**: `pandas`, `hvplot.pandas`, `matplotlib`, `pprint`, `kagglehub`, `os`, `requests`, `pickle`, `dotenv`.
+2. **Downloads and loads the Spotify dataset**: Uses `kagglehub` to download the dataset, cleans up column names, and saves the cleaned DataFrame to a pickle file.
+3. **Authenticates with the Spotify API and updates the DataFrame with Spotify IDs**: Retrieves Spotify IDs for tracks and updates the DataFrame.
+4. **Retrieves Last.fm tags for Spotify tracks**: Queries the Last.fm API to get the top tags for each track and updates the DataFrame.
+5. **Tries to retrieve Last.fm tags for tracks that are missing them using the Spotify API**: Uses the Spotify API to get track information and queries the Last.fm API to get the top tags.
+
+### Data Cleaning
+1. Drops rows with missing `spotify_id`.
+2. Converts specified numerical columns to numeric types by removing commas, replacing 'nan' strings with NaN values, and converting to numeric.
+3. Creates a new DataFrame for rows with missing `lastfm_tags`.
+4. Removes tracks with no `spotify_id`.
+5. Removes tracks with no `lastfm_tags`.
+6. Retains only the first 10 elements of the `lastfm_tags` list.
+7. Resets the index and renames the index column to `original_rank`.
+8. Displays the data types of the columns in `spotify_df`.
+
+### Analysis
+1. **Plots a histogram of the top 100 tags**: Uses `matplotlib` to create a bar plot of the top 100 tags by frequency.
+2. **Plots weighted tag frequency histograms**: Defines a function `plot_weighted_tag_frequency` to plot histograms of tag frequency weighted by the rank of its representatives.
+3. **Generates word clouds for tag frequency and weighted frequency**: Defines a function `plot_word_clouds` to create word clouds for tag frequency and weighted frequency.
+4. **Compares explicit and clean versions of tracks**: Filters the DataFrame to include tracks with both explicit and clean versions, and plots comparisons for various metrics.
 
 ## Usage
-
-### 1. Load the Dataset
-Go to https://www.kaggle.com/datasets/nelgiriyewithana/most-streamed-spotify-songs-2024 to download the file
-```python
-file_path = 'your_dataset_path_here.csv'
-data = pd.read_csv(file_path)
-```
-
-### 2. Generate Visualizations
-Run the Python script to produce:
-- Correlation matrices
-- Scatter plots (e.g., TikTok Views vs Spotify Streams)
-- Histograms (e.g., song release year distribution)
-- Top 10 tracks by Spotify streams
-
-### 3. Compare Metrics
-Add columns like `spotify_popularity` and `airplay_spins` to analyze their relationships visually.
-
-### Example: Top 10 Tracks by Spotify Streams
-```python
-plt.barh(top_10_tracks['track'] + ' - ' + top_10_tracks['artist'], top_10_tracks['spotify_streams'])
-plt.xlabel('Spotify Streams')
-plt.title('Top 10 Tracks by Spotify Streams')
-plt.show()
-```
-
-### Example: Spotify Popularity vs Airplay Spins
-```python
-plt.scatter(clean_df['spotify_popularity'], clean_df['airplay_spins'])
-plt.xlabel('Spotify Popularity')
-plt.ylabel('Airplay Spins')
-plt.title('Spotify Popularity vs Airplay Spins')
-plt.show()
-```
-
-## Contributions
-Contributions are welcome! Feel free to fork the repository, open issues, or submit pull requests.
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
+To run the analysis, ensure you have the required libraries installed and the dataset downloaded. Open the `musicPy.ipynb` notebook and execute the cells sequentially.
